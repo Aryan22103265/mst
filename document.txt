@@ -1,0 +1,71 @@
+1. High-Level Structure of the Code
+Main Entry Point: The main function will likely handle input parsing, setting up data structures, and calling the appropriate MST algorithm based on user input or configuration.
+
+Data Structures: The code will define key data structures to represent graphs (vertices, edges) and auxiliary structures for union-find operations (used in Kruskal's algorithm).
+
+MST Algorithms: Two CUDA-based MST algorithms will be implemented:
+
+Data-Parallel Borůvka's Algorithm (gpuMST)
+Data-Parallel Kruskal's Algorithm (gpuMSTdpk)
+CPU Baselines: There will be implementations of:
+
+Serial Kruskal's Algorithm
+Parallel CPU Kruskal's Algorithm
+Utility Functions: The code will include utility functions for tasks like sorting edges, union-find operations, timing, and memory management.
+
+2. Key Functions and Their Roles
+Main Function
+Initialization:
+
+Parses command-line arguments for graph type, size, and options.
+Initializes the graph, allocating memory and setting up initial conditions.
+Algorithm Selection:
+
+Depending on the input, selects whether to run gpuMST, gpuMSTdpk, or one of the CPU-based algorithms.
+Execution and Timing:
+
+Runs the selected algorithm, measures its execution time, and outputs the results.
+Cleanup:
+
+Frees any dynamically allocated memory.
+Graph Initialization Functions
+Graph Generation:
+
+Functions like generateRandomGraph(), generateGridGraph(), and generatePowerLawGraph() generate graphs of different types.
+These functions fill data structures with vertices and edges according to the chosen graph model.
+Graph Representation:
+
+Typically, a graph is represented by arrays of edges and vertices. The graph initialization functions prepare these arrays.
+Union-Find Structure
+Union-Find Operations:
+Functions for find() and union() operations with path compression and union by rank.
+These are essential for Kruskal’s algorithm to efficiently manage connected components.
+MST Algorithms
+Borůvka’s Algorithm (gpuMST):
+
+Edge Contraction: Finds the minimum edge for each component and contracts it.
+Component Merging: Merges components connected by minimum edges.
+Iterative Process: Repeats until only one component remains.
+Kruskal’s Algorithm (gpuMSTdpk):
+
+Edge Sorting: Sorts edges based on their weights using a parallel sort (likely using Thrust).
+Edge Selection: Selects edges in order and uses union-find to detect cycles, ensuring only MST edges are added.
+Parallel Execution on GPU
+CUDA Kernels:
+Kernels for parallelizing the key steps in Borůvka’s and Kruskal’s algorithms.
+For Borůvka’s, kernels would handle finding minimum edges for components and merging components.
+For Kruskal’s, kernels might handle edge filtering, union-find operations, and edge selection.
+Performance Measurement
+Timing Functions:
+
+Functions to record the start and end times of algorithm execution, typically using CUDA events or CPU timers.
+Result Reporting:
+
+Functions to report the execution time, memory usage, and correctness of the MST.
+3. Documentation Approach
+For each function, the documentation should include:
+
+Purpose: A brief description of what the function does.
+Parameters: Description of input parameters and expected output.
+Algorithm/Logic: Explanation of the core logic, particularly for complex operations like the union-find, sorting, or graph traversal.
+CUDA-Specific Considerations: For GPU functions, document any CUDA-specific features, such as memory management (e.g., cudaMalloc, cudaMemcpy), kernel launches, and synchronization.
